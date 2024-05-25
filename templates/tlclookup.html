@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TLC lookup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://www.picserver.org/highway-signs2/images/domain-lookup.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            /* Additional styling */
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5); /* Add opacity */
+            border-radius: 10px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 4px;
+        }
+
+        .result-text {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>IP Address / Domain Name Resolver</h1>
+        <form action="/lookup" method="post">
+            <label for="query">Enter IP address or Domain name:</label><br>
+            <input type="text" id="query" name="query"><br>
+            <button type="submit">Submit</button>
+        </form>
+        <div class="result">
+            <span class="result-text"><!-- Result will be displayed here --></span>
+        </div>
+    </div>
+</body>
+</html>

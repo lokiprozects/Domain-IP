@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Port Scanner</title>
+    <style>
+        /* Styling for the page */
+        body {
+            background-image: url('https://hacklido.com/assets/files/2023-06-01/1685628833-697225-nmap.jpg'); /* Background image */
+            background-size: cover; /* Cover the entire viewport */
+            background-repeat: no-repeat; /* No repeat */
+            background-attachment: fixed; /* Fixed position */
+            font-family: Arial, sans-serif; /* Font */
+            color: white; /* Text color */
+        }
+
+        #container {
+            width: 80%; /* Width of the container */
+            margin: auto; /* Center the container horizontally */
+            text-align: center; /* Center align text */
+            padding-top: 50px; /* Padding from the top */
+            position: relative; /* Relative positioning for child elements */
+        }
+
+        #portScanForm {
+            background-color: rgba(0, 0, 0, 0.5); /* Background color with opacity */
+            padding: 20px; /* Padding */
+            border-radius: 10px; /* Border radius */
+        }
+
+        input[type="text"] {
+            width: 200px; /* Input field width */
+            padding: 10px; /* Padding */
+            margin: 5px; /* Margin */
+            border-radius: 5px; /* Border radius */
+            border: none; /* No border */
+            outline: none; /* No outline */
+        }
+
+        button[type="submit"] {
+            padding: 10px 20px; /* Padding */
+            border-radius: 5px; /* Border radius */
+            border: none; /* No border */
+            background-color: #4CAF50; /* Background color */
+            color: white; /* Text color */
+            cursor: pointer; /* Pointer cursor */
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049; /* Hover background color */
+        }
+
+        #scanResults {
+            margin-top: 20px; /* Margin from the top */
+            text-align: left; /* Left align text */
+            padding: 10px; /* Padding */
+            border-radius: 10px; /* Border radius */
+            background-color: rgba(255, 255, 255, 0.3); /* Mixed color background */
+        }
+
+        #timeTaken {
+            position: absolute; /* Absolute positioning for the time counter */
+            top: 10px; /* Distance from the top */
+            right: 10px; /* Distance from the right */
+            font-size: 20px; /* Font size */
+            display: none; /* Initially hidden */
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Port Scanner</h1>
+        <!-- Form for input -->
+        <form id="portScanForm">
+            <label for="target">Target:</label>
+            <input type="text" id="target" name="target" required><br><br>
+            <button type="submit">Scan Ports</button> <!-- Submit button -->
+        </form>
+        <!-- Display area for scan results -->
+        <div id="scanResults"></div>
+        <!-- Time counter area -->
+        <div id="timeTaken"></div>
+    </div>
+
+    <script>
+        // JavaScript for handling form submission and displaying results
+        document.getElementById('portScanForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+            var target = document.getElementById('target').value; // Get target IP address
+            document.getElementById('scanResults').innerHTML = "Scanning..."; // Display scanning message
+            var counter = 0;
+            var timeTakenElement = document.getElementById('timeTaken');
+            timeTakenElement.style.display = 'block'; // Show the time counter
+
+            // Interval to update the time counter every second
+            var timeInterval = setInterval(function() {
+                timeTakenElement.innerHTML = counter; // Update time counter
+                counter++;
+            }, 1000);
+
+            // Send AJAX request to the backend
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/scan_ports');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    clearInterval(timeInterval); // Stop the counter when scanning is done
+                    var response = JSON.parse(xhr.responseText);
+                    var results = response.results;
+                    var html = "";
+                    // Generate HTML for displaying scan results
+                    for (var i = 0; i < results.length; i++) {
+                        html += '<div class="portName">' + results[i] + '</div>';
+                    }
+                    document.getElementById('scanResults').innerHTML = html; // Display scan results
+                } else {
+                    console.log('Request failed. Returned status of ' + xhr.status);
+                }
+            };
+            xhr.send(JSON.stringify({target: target})); // Send target IP to backend for scanning
+        });
+    </script>
+</body>
+</html>
